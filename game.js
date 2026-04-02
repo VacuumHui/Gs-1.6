@@ -368,37 +368,52 @@ class GameScene extends Phaser.Scene {
     }
 
     // --- VISUALS & FIELD OF VIEW ---
+    // --- VISUALS & FIELD OF VIEW ---
     setupFoVMask() {
-        // Создаем черную маску на весь экран
-        this.fovGraphics = this.add.graphics();
-        this.fovGraphics.setDepth(100); // Поверх всего кроме UI
+        // 1. Создаем объект графики, который будет работать как "трафарет" (он невидим)
+        this.maskGraphics = this.make.graphics();
+        
+        // 2. Создаем огромный черный прямоугольник (Туман войны)
+        this.fogOfWar = this.add.rectangle(
+            0, 0, 
+            GAME_CONFIG.WORLD_BOUNDS.width, 
+            GAME_CONFIG.WORLD_BOUNDS.height, 
+            0x000000, 0.95
+        ).setOrigin(0, 0); // Ставим якорь в верхний левый угол мира
+        
+        this.fogOfWar.setDepth(100); // Поверх всего мира
+        
+        // 3. Создаем маску из нашего трафарета и ИНВЕРТИРУЕМ её (чтобы конус стирал черноту)
+        const mask = this.maskGraphics.createGeometryMask();
+        mask.setInvertAlpha(true);
+        this.fogOfWar.setMask(mask);
     }
 
     updateVisuals() {
         const myPlayer = this.players.get(this.myId);
         if (!myPlayer) return;
 
-        // 1. Отрисовка конуса видимости (Маска тумана войны)
-        this.fovGraphics.clear();
+        // 1. Очищаем старый трафарет
+        this.maskGraphics.clear();
         
-        // Заливаем весь мир "темнотой"
-        this.fovGraphics.fillStyle(0x000000, 0.95);
-        this.fovGraphics.fillRect(0, 0, GAME_CONFIG.WORLD_BOUNDS.width, GAME_CONFIG.WORLD_BOUNDS.height);
+        // 2. Рисуем конус видимости (белым цветом, цвет здесь не важен, важна форма)
+        this.maskGraphics.fillStyle(0xffffff, 1);
+        this.maskGraphics.beginPath();
+        this.maskGraphics.moveTo(myPlayer.sprite.x, myPlayer.sprite.y);
         
-        // "Вырезаем" конус с помощью функции стирания
-        this.fovGraphics.globalCompositeOperation = 'destination-out';
-        this.fovGraphics.beginPath();
-        this.fovGraphics.moveTo(myPlayer.sprite.x, myPlayer.sprite.y);
-        
-        // Рисуем дугу (Field of View = 120 градусов)
         const halfFov = GAME_CONFIG.FOV_ANGLE / 2;
-        this.fovGraphics.arc(
+        this.maskGraphics.arc(
             myPlayer.sprite.x, myPlayer.sprite.y, 
-            800, // Дальность видимости
+            800, // Дальность света (в пикселях)
             myPlayer.aimAngle - halfFov, 
             myPlayer.aimAngle + halfFov, 
             false
         );
+        this.maskGraphics.fillPath();
+
+        // 3. Вращение самого спрайта игрока в сторону прицела (опционально)
+        myPlayer.sprite.rotation = myPlayer.aimAngle;
+    };
         this.fovGraphics.fillPath();
         this.fovGraphics.globalCompositeOperation = 'source-over'; // Возвращаем режим рендера
 
