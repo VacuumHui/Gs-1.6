@@ -14,6 +14,12 @@ class UIScene extends Phaser.Scene {
         super({ key: 'UIScene' });
     }
 
+    preload() {
+        // Загружаем плагин напрямую из официального репозитория. 
+        // Это гарантирует, что он будет доступен на 100%!
+        this.load.plugin('rexvirtualjoystickplugin', 'https://cdn.jsdelivr.net/npm/phaser3-rex-plugins/dist/rexvirtualjoystickplugin.min.js', true);
+    }
+
     create() {
         // Джойстики не привязаны к камере, поэтому они в отдельной сцене поверх основной
         this.inputManager = new InputManager(this);
