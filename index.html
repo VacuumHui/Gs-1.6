@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- ЖЕСТКИЕ ПРАВИЛА ДЛЯ MOBILE: Запрет зума, адаптация под notch, scale = 1.0 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Mobile Top-Down P2P Shooter</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* Критично для мобильных джойстиков: отключаем свайпы браузера */
+            touch-action: none; 
+            -webkit-user-select: none; /* Запрет выделения текста */
+            user-select: none;
+            -webkit-touch-callout: none; /* Запрет контекстного меню по долгому тапу */
+        }
+        
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: #111;
+            overflow: hidden; /* Скрываем любые скроллбары */
+        }
+
+        #game-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        canvas {
+            display: block;
+        }
+    </style>
+
+    <!-- Подключаем Phaser 3 -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+    <!-- Подключаем плагин rexVirtualJoystick -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser3-rex-plugins@1.1.84/dist/rexvirtualjoystickplugin.min.js"></script>
+    <!-- Подключаем PeerJS -->
+    <script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
+</head>
+<body>
+    <div id="game-container"></div>
+    
+    <!-- Главная точка входа. Используем type="module" для ES6 импортов -->
+    <script type="module" src="./game.js"></script>
+</body>
+</html>
