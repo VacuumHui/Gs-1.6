@@ -32,7 +32,7 @@ export default class NetworkManager {
         this.isHost = true;
         return new Promise((resolve, reject) => {
             // Оставляем ID пустым для автогенерации, либо можно задать кастомный
-            this.peer = new Peer({ config: { iceServers: NET_CONFIG.PEER_STUN_SERVERS } });
+            this.peer = new window.Peer({ config: { iceServers: NET_CONFIG.PEER_STUN_SERVERS } });
 
             this.peer.on('open', (id) => {
                 console.log('[HOST] Server started. Room ID:', id);
@@ -69,7 +69,7 @@ export default class NetworkManager {
     async initAsClient(hostId) {
         this.isHost = false;
         return new Promise((resolve, reject) => {
-            this.peer = new Peer({ config: { iceServers: NET_CONFIG.PEER_STUN_SERVERS } });
+            this.peer = new window.Peer({ config: { iceServers: NET_CONFIG.PEER_STUN_SERVERS } });
 
             this.peer.on('open', (id) => {
                 console.log('[CLIENT] Peer initialized. My ID:', id);
