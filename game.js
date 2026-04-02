@@ -451,7 +451,7 @@ function startGame() {
     const config = {
         type: Phaser.WEBGL,
         scale: {
-            mode: Phaser.Scale.RESIZE, // Адаптивно под экран
+            mode: Phaser.Scale.RESIZE,
             parent: 'game-container',
             width: '100%',
             height: '100%'
@@ -460,7 +460,16 @@ function startGame() {
             default: 'arcade',
             arcade: { debug: false }
         },
-        scene:[GameScene, UIScene]
+        // --- ВОТ ЭТОТ БЛОК Я ЗАБЫЛ ДОБАВИТЬ ---
+        plugins: {
+            global:[{
+                key: 'rexVirtualJoystick',
+                plugin: window.rexvirtualjoystickplugin, // Берем плагин из глобальной области (подключен в HTML)
+                start: true
+            }]
+        },
+        // --------------------------------------
+        scene: [GameScene, UIScene]
     };
 
     const game = new Phaser.Game(config);
