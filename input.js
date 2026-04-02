@@ -10,8 +10,11 @@ export default class InputManager {
     constructor(uiScene) {
         this.scene = uiScene;
         
+        // Получаем скачанный плагин по ключу
+        const joystickPlugin = this.scene.plugins.get('rexvirtualjoystickplugin');
+        
         // Левый стик (Движение)
-        this.moveStick = this.scene.plugins.get('rexVirtualJoystick').add(this.scene, {
+        this.moveStick = joystickPlugin.add(this.scene, {
             x: 120,
             y: this.scene.scale.height - 120,
             radius: 80,
@@ -22,7 +25,7 @@ export default class InputManager {
         });
 
         // Правый стик (Прицеливание и стрельба)
-        this.aimStick = this.scene.plugins.get('rexVirtualJoystick').add(this.scene, {
+        this.aimStick = joystickPlugin.add(this.scene, {
             x: this.scene.scale.width - 120,
             y: this.scene.scale.height - 120,
             radius: 80,
